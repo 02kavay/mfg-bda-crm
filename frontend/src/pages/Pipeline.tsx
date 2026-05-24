@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
+import api from '../services/api';
 import { 
   DndContext, closestCenter, KeyboardSensor, PointerSensor, 
   useSensor, useSensors, DragEndEvent 
@@ -161,7 +161,7 @@ const Pipeline = () => {
 
     const fetchLeads = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/leads', {
+        const res = await api.get('/leads', {
           headers: { Authorization: `Bearer ${token}` }
         });
         setLeads(res.data);
@@ -227,8 +227,8 @@ const Pipeline = () => {
       );
 
       try {
-        await axios.patch(
-          `http://localhost:5000/api/leads/${leadId}`,
+        await api.patch(
+          `/leads/${leadId}`,
           { stage: newStage },
           { headers: { Authorization: `Bearer ${token}` } }
         );
@@ -247,8 +247,8 @@ const Pipeline = () => {
     if (!newCompany.trim() || !newTitle.trim()) return;
 
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/leads',
+      const response = await api.post(
+        '/leads',
         {
           title: newTitle,
           companyName: newCompany,

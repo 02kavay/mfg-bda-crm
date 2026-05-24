@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, User, Tag, Phone, Mail, FileText, CheckCircle, Trash2 } from 'lucide-react';
-import axios from 'axios';
+import api from '../services/api';
 
 interface BDA {
   _id: string;
@@ -72,10 +72,10 @@ const LeadModal: React.FC<LeadModalProps> = ({ lead, onClose, onUpdate, onDelete
     const fetchData = async () => {
       try {
         const [logsRes, bdasRes] = await Promise.all([
-          axios.get(`http://localhost:5000/api/leads/communications/${lead._id}`, {
+          api.get(`/leads/communications/${lead._id}`, {
             headers: { Authorization: `Bearer ${token}` }
           }),
-          isManager ? axios.get('http://localhost:5000/api/auth/bdas', {
+          isManager ? api.get('/auth/bdas', {
             headers: { Authorization: `Bearer ${token}` }
           }) : Promise.resolve({ data: [] })
         ]);
@@ -92,8 +92,8 @@ const LeadModal: React.FC<LeadModalProps> = ({ lead, onClose, onUpdate, onDelete
 
   const handleSaveLead = async () => {
     try {
-      const response = await axios.patch(
-        `http://localhost:5000/api/leads/${lead._id}`,
+      const response = await api.patch(
+        `/leads/${lead._id}`,
         {
           companyName,
           contactPerson,
@@ -122,8 +122,8 @@ const LeadModal: React.FC<LeadModalProps> = ({ lead, onClose, onUpdate, onDelete
     if (!logContent.trim()) return;
     setSubmittingLog(true);
     try {
-      const response = await axios.post(
-        'http://localhost:5000/api/leads/communications',
+      const response = await api.post(
+        '/leads/communications',
         {
           leadId: lead._id,
           type: logType,
@@ -143,7 +143,7 @@ const LeadModal: React.FC<LeadModalProps> = ({ lead, onClose, onUpdate, onDelete
   const handleDeleteLead = async () => {
     if (!window.confirm('Are you sure you want to delete this lead? All communication records will be permanently removed.')) return;
     try {
-      await axios.delete(`http://localhost:5000/api/leads/${lead._id}`, {
+      await api.delete(`/leads/${lead._id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       onDelete(lead._id);
