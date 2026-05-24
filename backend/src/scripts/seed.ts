@@ -1,8 +1,12 @@
 import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
+import dotenv from 'dotenv';
+import path from 'path';
 import User from '../models/User';
 import Lead from '../models/Lead';
 import Communication from '../models/Communication';
+
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/mfg_bda';
 
